@@ -1,22 +1,33 @@
-from flask import Flask, request, jsonify
-import random
+import os
+from flask import Flask, render_template, request, jsonify
 import openai
+from dotenv import load_dotenv
+
+load_dotenv()  # Load environment variables from .env file
 
 app = Flask(__name__)
 
-@app.route('/api/ask', methods=['POST'])
+
+@app.route("/")
+def index():
+    return render_template("index.html")
+
+
+@app.route("/api/ask", methods=["POST"])
 def ask():
-    user_input = request.json['question']
+    user_input = request.json["question"]
 
     response = call_openai_api(user_input)
 
-    return jsonify({'response': response})
+    return jsonify({"response": response})
 
-openai.api_key = "your_api_key"
+
+openai.api_key = os.getenv("OPENAI_API_KEY")
+
 
 def call_openai_api(prompt):
     response = openai.Completion.create(
-        engine="davinci-codex",
+        engine="text-davinci-002",
         prompt=prompt,
         max_tokens=50,  # Limit response to 50 characters
         n=1,
@@ -25,5 +36,6 @@ def call_openai_api(prompt):
     )
     return response.choices[0].text.strip()
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     app.run(debug=True)
