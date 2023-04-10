@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>ChatGPT Chatbot</title>
+	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+	<style>
+		/* Add your styles here */
+	</style>
+</head>
+
+<body>
+	<div class="card">
+		<div class="character-image">
+			<img id="character-image" src="" alt="Character Image">
+		</div>
+		<div class="response">
+			<p id="response-text"></p>
+		</div>
+	</div>
+	<div class="user-input">
+		<input type="text" id="user-input" placeholder="Ask a question...">
+	</div>
+	<script>
+		const characterImages = ["image1.jpg", "image2.jpg", "image3.jpg"]; // Replace with your image URLs
+
+		function getRandomImage() {
+			return characterImages[Math.floor(Math.random() * characterImages.length)];
+		}
+
+		document.getElementById("user-input").addEventListener("keypress", async (e) => {
+			if (e.key === "Enter") {
+				const userInput = e.target.value;
+				const response = await axios.post("/api/ask", { question: userInput });
+
+				document.getElementById("response-text").innerText = response.data.response;
+				document.getElementById("character-image").src = getRandomImage();
+			}
+		});
+
+	</script>
+</body>
+
+</html>
